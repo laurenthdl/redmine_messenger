@@ -25,6 +25,7 @@ en:
   label_settings_messenger_icon: Messenger Icon
   label_settings_messenger_url: Messenger URL
   label_settings_messenger_username: Messenger username
+  label_settings_messenger_format: Message Format
   label_settings_messenger_verify_ssl: Verify SSL
   label_settings_messenger_direct_users_messages: Send direct messages
   label_settings_new_include_description: New issue description?
@@ -50,6 +51,7 @@ en:
   messenger_settings_intro: "Leave the Messenger URL in the administration area empty in order to send no messages from Redmine to the Messenger. No matter what else you have configured here. In case you wish to send messages of all Redmine projects to the Messenger fill out the URL. The messages will be sent to the specific channel. If you want only to be notified by some of the projects (not all) leave the messenger URL here blank and go to the specific project configuration."
   messenger_settings_project_intro: "If you left empty the Messenger URL in the administration area in case to be not globally notified by all project changes you can configure your Messenger URL in the project settings."
   messenger_url_info_html: 'Generate an <a target="_blank" href="https://github.com/AlphaNodes/redmine_messenger#prepare-your-messenger-service">Incoming WebHook</a> URL from the messenger service. Leave it empty, if you only want to activate specific projects with project based settings'
+  messenger_format_info_html: 'Choose link format: Slack/Mattermost uses <code>&lt;url|text&gt;</code>, RocketChat/Markdown uses <code>[text](url)</code>.'
   messenger_verify_ssl_info_html: 'If your Messenger service uses an invalid or self-signed SSL certificate, disable it.'
   messenger_direct_users_messages_info_html: 'If enabled Messenger will post http requests to each user as channel (direct message in RocketChat) along with post in channel'
   messenger_wiki_intro: Activate the changes for Wikis that should be sent to the pre-defined Messenger channel.

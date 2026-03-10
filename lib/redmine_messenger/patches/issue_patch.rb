@@ -48,7 +48,7 @@ module RedmineMessenger
 
             attachments.each do |att|
               attachment[:fields] << { title: I18n.t(:label_attachment),
-                                       value: "<#{Messenger.object_url att}|#{ERB::Util.html_escape att.filename}>",
+                                       value: Messenger.format_link(Messenger.object_url(att), ERB::Util.html_escape(att.filename)),
                                        short: true }
             end
 
@@ -130,9 +130,9 @@ module RedmineMessenger
             mention_to = Messenger.mentions project, text
           end
           if current_journal.nil?
-            "<#{Messenger.object_url self}|#{Messenger.markup_format self}>#{mention_to}"
+            "#{Messenger.format_link(Messenger.object_url(self), Messenger.markup_format(self))}#{mention_to}"
           else
-            "<#{Messenger.object_url self}#change-#{current_journal.id}|#{Messenger.markup_format self}>#{mention_to}"
+            "#{Messenger.format_link(Messenger.object_url(self) + '#change-' + current_journal.id.to_s, Messenger.markup_format(self))}#{mention_to}"
           end
         end
       end

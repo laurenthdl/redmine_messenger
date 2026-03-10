@@ -1,0 +1,11 @@
+p
+  = f.select mf, options_for_select([['Slack/Mattermost', 'slack'], ['RocketChat/Markdown', 'markdown']], @messenger_setting.send(mf)), { include_blank: l(:label_default) }, label: l("label_settings_#{mf}")
+  em.info
+    = l :label_messenger_project_text_field_info
+    |  (
+    = l :label_default
+    ' :
+    - default_format = Messenger.default_textfield(@project, mf).presence || 'slack'
+    - default_label = default_format == 'markdown' ? 'RocketChat/Markdown' : 'Slack/Mattermost'
+    = default_label
+    | )

@@ -25,6 +25,7 @@ fr:
   label_settings_messenger_icon: Icône affiché
   label_settings_messenger_url: URL WebHook entrant
   label_settings_messenger_username: Nom du robot
+  label_settings_messenger_format: Format de message
   label_settings_messenger_verify_ssl: Vérifier SSL
   label_settings_new_include_description: Inclure la description des nouveaux tickets
   label_settings_post_contact_updates: Mises à jour de contact ?
@@ -49,6 +50,7 @@ fr:
   messenger_settings_intro: "Laisser l'URL de Messenger dans la zone d'administration vide pour ne pas envoyer de messages de Redmine à Messenger. Peu importe ce que vous avez configuré ici. Si vous souhaitez envoyer des messages de tous les projets Redmine à Messenger, renseignez l’URL. Les messages seront envoyés au canal spécifique. Si vous souhaitez uniquement être averti par certains des projets (pas tous), laissez l'URL du messager ici vide et accédez à la configuration du projet spécifique."
   messenger_settings_project_intro: "Si vous laissez vide l'URL de Messenger dans la zone d'administration au cas où vous ne seriez pas averti globalement de toutes les modifications apportées au projet, vous pouvez configurer votre URL Messenger dans les paramètres du projet."
   messenger_url_info_html: 'Générer une adresse <a target="_blank" href="https://github.com/AlphaNodes/redmine_messenger#prepare-your-messenger-service">Incoming WebHook</a> pour le service global de Messenger. Laisser ce champ vide pour activer uniquement des projets spécifiques avec des paramètres personnalisés pour chaque projet.'
+  messenger_format_info_html: 'Choisir le format de liens : Slack/Mattermost utilise <code>&lt;url|text&gt;</code>, RocketChat/Markdown utilise <code>[text](url)</code>.'
   messenger_verify_ssl_info_html: 'Désactiver cette vérification si votre service Messenger utilise un certificat SSL non valide ou auto-signé.'
   messenger_wiki_intro: Activer les notifications a envoyer au canal Messenger pour l'ensemble des wikis.
   permission_manage_messenger: Gérer Messenger

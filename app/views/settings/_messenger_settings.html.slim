@@ -18,6 +18,10 @@ fieldset#messenger_settings.box.tabular
     label = l :label_settings_messenger_username
     = text_field_tag 'settings[messenger_username]', @settings[:messenger_username], size: 30
   p
+    label = l :label_settings_messenger_format
+    = select_tag 'settings[messenger_format]', options_for_select([['Slack/Mattermost', 'slack'], ['RocketChat/Markdown', 'markdown']], @settings[:messenger_format]), size: 1
+    em.info = t :messenger_format_info_html
+  p
     label = l :label_settings_messenger_verify_ssl
     = check_box_tag 'settings[messenger_verify_ssl]', 1, @settings[:messenger_verify_ssl].to_i == 1
     em.info = t :messenger_verify_ssl_info_html

@@ -4,20 +4,22 @@ class Messenger
   include Redmine::I18n
 
   class << self
-    def markup_format(text)
-      # TODO: output format should be markdown, but at the moment there is no
-      #       solution without using pandoc (http://pandoc.org/), which requires
-      #       packages on os level
-      #
-      # Redmine::WikiFormatting.html_parser.to_text(text)
-
+    def markup_format(text, format = nil)
       text = text.to_s.dup
+      format ||= RedmineMessenger.setting(:messenger_format) || 'slack'
 
-      # @see https://api.slack.com/reference/surfaces/formatting#escaping
-
-      text.gsub! '&', '&amp;'
-      text.gsub! '<', '&lt;'
-      text.gsub! '>', '&gt;'
+      case format
+      when 'markdown'
+        # For RocketChat/Markdown: no escaping needed
+        # RocketChat handles text as-is in webhook payloads
+        text
+      else
+        # For Slack/Mattermost: escape &, <, >
+        # @see https://api.slack.com/reference/surfaces/formatting#escaping
+        text.gsub! '&', '&amp;'
+        text.gsub! '<', '&lt;'
+        text.gsub! '>', '&gt;'
+      end
 
       text
     end
@@ -77,11 +79,24 @@ class Messenger
     end
 
     def project_url_markdown(project)
-      "<#{object_url project}|#{project.name}>"
+      format_link(object_url(project), project.name)
     end
 
     def url_markdown(obj, name)
-      "<#{object_url obj}|#{name}>"
+      format_link(object_url(obj), name)
+    end
+
+    def format_link(url, text, format = nil)
+      format ||= RedmineMessenger.setting(:messenger_format) || 'slack'
+
+      case format
+      when 'markdown'
+        # RocketChat/Markdown format: [text](url)
+        "[#{text}](#{url})"
+      else
+        # Slack/Mattermost format: <url|text>
+        "<#{url}|#{text}>"
+      end
     end
 
     def textfield_for_project(proj, config)
@@ -222,7 +237,7 @@ class Messenger
         attachment = Attachment.find_by id: detail.prop_key
         value = if attachment.present?
                   escape = false
-                  "<#{object_url attachment}|#{markup_format attachment.filename}>"
+                  format_link(object_url(attachment), attachment.filename.to_s)
                 else
                   detail.prop_key.to_s
                 end
@@ -231,7 +246,7 @@ class Messenger
         issue = Issue.find_by id: detail.value
         value = if issue.present?
                   escape = false
-                  "<#{object_url issue}|#{markup_format issue}>"
+                  format_link(object_url(issue), issue.to_s)
                 else
                   detail.value.to_s
                 end

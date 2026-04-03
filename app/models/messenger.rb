@@ -33,6 +33,14 @@ class Messenger
       return if url.blank? || channels.blank?
 
       params = { text: msg, link_names: 1 }
+
+      format = RedmineMessenger.setting(:messenger_format) || 'slack'
+
+      if format == 'markdown' && options[:users_to_notify].present?
+        mentions = options[:users_to_notify].map { |u| u.login }.join(' ')
+        params[:text] = msg.present? && mentions.present? ? (msg + ' ' + mentions) : (msg + mentions)
+      end
+
       username = textfield_for_project options[:project], :messenger_username
       params[:username] = username if username.present?
       params[:attachments] = options[:attachment]&.any? ? [options[:attachment]] : []
@@ -45,7 +53,8 @@ class Messenger
         end
       end
 
-      channels.each do |channel|
+      channels_to_send = format == 'markdown' ? [channels.first] : channels
+      channels_to_send.each do |channel|
         params[:channel] = channel
         MessengerDeliverJob.perform_later url, params
       end
@@ -128,6 +137,10 @@ class Messenger
 
         return pm.messenger_channel.split(',').map!(&:strip).uniq
       end
+
+      format = RedmineMessenger.setting(:messenger_format) || 'slack'
+      return [] if format == 'markdown'
+
       default_project_channels proj
     end
 

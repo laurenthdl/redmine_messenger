@@ -16,9 +16,11 @@ module RedmineMessenger
         def send_messenger_create
           channels = Messenger.channels_for_project project
           url = Messenger.url_for_project project
+          users_to_notify = []
 
           if Messenger.setting_for_project project, :messenger_direct_users_messages
-            messenger_to_be_notified.each do |user|
+            users_to_notify = messenger_to_be_notified.reject { |user| user == author }
+            users_to_notify.each do |user|
               channels.append "@#{user.login}" unless user == author
             end
           end
@@ -64,7 +66,7 @@ module RedmineMessenger
                               project_url: Messenger.project_url_markdown(project),
                               url: send_messenger_mention_url(project, description),
                               user: author),
-                            channels, url, attachment: attachment, project: project
+                            channels, url, attachment: attachment, project: project, users_to_notify: users_to_notify
           ensure
             ::I18n.locale = initial_language
           end
@@ -75,9 +77,11 @@ module RedmineMessenger
 
           channels = Messenger.channels_for_project project
           url = Messenger.url_for_project project
+          users_to_notify = []
 
           if Messenger.setting_for_project project, :messenger_direct_users_messages
-            messenger_to_be_notified.each do |user|
+            users_to_notify = messenger_to_be_notified.reject { |user| user == current_journal.user }
+            users_to_notify.each do |user|
               channels.append "@#{user.login}" unless user == current_journal.user
             end
           end
@@ -110,7 +114,7 @@ module RedmineMessenger
                               project_url: Messenger.project_url_markdown(project),
                               url: send_messenger_mention_url(project, description),
                               user: current_journal.user),
-                            channels, url, attachment: attachment, project: project
+                            channels, url, attachment: attachment, project: project, users_to_notify: users_to_notify
           ensure
             ::I18n.locale = initial_language
           end
@@ -119,6 +123,11 @@ module RedmineMessenger
         private
 
         def messenger_to_be_notified
+          format = RedmineMessenger.setting(:messenger_format) || 'markdown'
+          if format == 'markdown'
+            return assigned_to.present? ? [assigned_to] : []
+          end
+
           to_be_notified = (notified_users + notified_watchers).compact
           to_be_notified.uniq
         end
